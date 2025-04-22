@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as p5 from 'p5';
+
+declare let p5: any;
 
 @Component({
   selector: 'app-root',
@@ -22,11 +23,14 @@ export class AppComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.createP5Canvas();
+    // Aguardar um momento para garantir que p5.sound esteja carregado
+    setTimeout(() => {
+      this.createP5Canvas();
+    }, 1000);
   }
 
   private createP5Canvas() {
-    this.p5 = new p5((p: any) => {
+    const sketch = (p: any) => {
       p.preload = () => {
         console.log('Iniciando carregamento dos recursos...');
         
@@ -45,30 +49,35 @@ export class AppComponent implements OnInit {
         );
 
         // Carregando sons
-        try {
-          this.futeSom = p.loadSound('assets/Som/futebol.mp3',
-            () => {
-              console.log('Som futebol carregado');
-              this.checkSoundsLoaded();
-            },
-            (err: any) => console.error('Erro ao carregar som futebol:', err)
-          );
-          this.rugbySom = p.loadSound('assets/Som/rugby.mp3',
-            () => {
-              console.log('Som rugby carregado');
-              this.checkSoundsLoaded();
-            },
-            (err: any) => console.error('Erro ao carregar som rugby:', err)
-          );
-          this.basqueteSom = p.loadSound('assets/Som/basquete.mp3',
-            () => {
-              console.log('Som basquete carregado');
-              this.checkSoundsLoaded();
-            },
-            (err: any) => console.error('Erro ao carregar som basquete:', err)
-          );
-        } catch (error) {
-          console.error('Erro ao carregar sons:', error);
+        if (p.loadSound) {
+          console.log('p5.sound está disponível');
+          try {
+            this.futeSom = p.loadSound('assets/Som/futebol.mp3',
+              () => {
+                console.log('Som futebol carregado');
+                this.checkSoundsLoaded();
+              },
+              (err: any) => console.error('Erro ao carregar som futebol:', err)
+            );
+            this.rugbySom = p.loadSound('assets/Som/rugby.mp3',
+              () => {
+                console.log('Som rugby carregado');
+                this.checkSoundsLoaded();
+              },
+              (err: any) => console.error('Erro ao carregar som rugby:', err)
+            );
+            this.basqueteSom = p.loadSound('assets/Som/basquete.mp3',
+              () => {
+                console.log('Som basquete carregado');
+                this.checkSoundsLoaded();
+              },
+              (err: any) => console.error('Erro ao carregar som basquete:', err)
+            );
+          } catch (error) {
+            console.error('Erro ao carregar sons:', error);
+          }
+        } else {
+          console.error('p5.sound não está disponível');
         }
       };
 
@@ -116,7 +125,9 @@ export class AppComponent implements OnInit {
 
         this.verificarColisoes(p);
       };
-    });
+    };
+
+    this.p5 = new p5(sketch);
   }
 
   private checkSoundsLoaded() {
