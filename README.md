@@ -1,6 +1,6 @@
 # Bolas Esportivas Animadas - Angular
 
-Este projeto é uma simulação interativa de bolas esportivas (futebol, rugby e basquete) desenvolvida em Angular. As bolas se movem, colidem e produzem efeitos sonoros, criando uma experiência visual e auditiva envolvente.
+Este projeto é uma simulação interativa de bolas esportivas (futebol, rugby e basquete) desenvolvida em Angular. As bolas se movem, colidem e produzem efeitos sonoros.
 
 ## Funcionalidades
 
